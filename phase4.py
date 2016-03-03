@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Oct  3 22:50:49 2015
+Edited on Thur Mar 3 2016
 
 @author: Emily Yang
+@editor: Sarah Hale
 """
 
 # -*- coding: utf-8 -*-
@@ -12,20 +14,44 @@ import numpy as np
 #import pyximport
 #pyximport.install()
 from kapaolibplus import Slopes
-from FTR.FTR.utils import circle_aperture, remove_piston, remove_tiptilt
-from FTR.FTR import FourierTransformReconstructor as FTRecon
+from FTR.utils import circle_aperture, remove_piston, remove_tiptilt
+from FTR import FourierTransformReconstructor as FTRecon
 import matplotlib.pyplot as plt
 
+SLOPE_X_FILE = './runs/slope_x_' + '20140710_224918' + '.tel'
+SLOPE_Y_FILE = './runs/slope_y_' + '20140710_224918' + '.tel'
 
-SLOPE_X_FILE = './run_421/slope_x_' + '20131217_023427' + '.tel'
-SLOPE_Y_FILE = './run_421/slope_y_' + '20131217_023427' + '.tel'
+#SLOPE_X_FILE = './run_421/slope_x_' + '20131217_023427' + '.tel'
+#SLOPE_Y_FILE = './run_421/slope_y_' + '20131217_023427' + '.tel'
 
 #SLOPE_X_FILE = './TelemetryOpenLoop/slope_x_' + filenum + '.tel'
 #SLOPE_Y_FILE = './TelemetryOpenLoop/slope_y_' + filenum + '.tel'
 
-
-
 slope_x, slope_y = Slopes(SLOPE_X_FILE), Slopes(SLOPE_Y_FILE)
+
+
+
+def change_files():
+    global SLOPE_X_FILE
+    global SLOPE_Y_FILE
+    global slope_x
+    global slope_y
+    
+    # get user input
+    print "Please input the date associated with the file"
+    print "   for example, '20140710_224918'"
+    date = raw_input(" > ")
+    
+    # if the user didn't actually put anything, then default to this
+    if date == '':
+        date = '20140710_224918'
+   
+    # redo the slope file names with this new date 
+    SLOPE_X_FILE = './runs/slope_x_' + date + '.tel'
+    SLOPE_Y_FILE = './runs/slope_y_' + date + '.tel'
+    
+    # redo the slopes with the new data  
+    slope_x, slope_y = Slopes(SLOPE_X_FILE), Slopes(SLOPE_Y_FILE)
 
 
 def slope_to_recon(slope_frame):
