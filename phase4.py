@@ -33,28 +33,28 @@ slope_x, slope_y = Slopes(SLOPE_X_FILE), Slopes(SLOPE_Y_FILE)
 def get_files():
     # this is the folder in which we will look for telemetry
     file_directoy = 'runs'
-    
+   
+    # get all of the files which have the .tel extension 
     files = []
-    
     for telfile in os.listdir(file_directoy):
         if telfile.endswith(".tel"):
             files.append(telfile)
     
-    files.sort()    
-    print files
-
+    # split these files up into x and y slopes
     xfiles = []
     yfiles = []
     for telfile in files:
+        # assuming that the file names start with slope_
         if telfile.startswith('slope_x'):
             xfiles.append(telfile)
         elif telfile.startswith('slope_y'):
             yfiles.append(telfile)
 
+    # sort the files so that the indicies in each list match up
+    # if they do not, this is a problem
+    # TODO: make these pairs into tuples or something neater than this
     xfiles.sort()
     yfiles.sort()
-    print xfiles
-    print yfiles
 
 def change_files():
     global SLOPE_X_FILE
