@@ -17,6 +17,7 @@ from kapaolibplus import Slopes
 from FTR.utils import circle_aperture, remove_piston, remove_tiptilt
 from FTR import FourierTransformReconstructor as FTRecon
 import matplotlib.pyplot as plt
+import os
 
 SLOPE_X_FILE = './runs/slope_x_' + '20140710_224918' + '.tel'
 SLOPE_Y_FILE = './runs/slope_y_' + '20140710_224918' + '.tel'
@@ -29,7 +30,31 @@ SLOPE_Y_FILE = './runs/slope_y_' + '20140710_224918' + '.tel'
 
 slope_x, slope_y = Slopes(SLOPE_X_FILE), Slopes(SLOPE_Y_FILE)
 
+def get_files():
+    # this is the folder in which we will look for telemetry
+    file_directoy = 'runs'
+    
+    files = []
+    
+    for telfile in os.listdir(file_directoy):
+        if telfile.endswith(".tel"):
+            files.append(telfile)
+    
+    files.sort()    
+    print files
 
+    xfiles = []
+    yfiles = []
+    for telfile in files:
+        if telfile.startswith('slope_x'):
+            xfiles.append(telfile)
+        elif telfile.startswith('slope_y'):
+            yfiles.append(telfile)
+
+    xfiles.sort()
+    yfiles.sort()
+    print xfiles
+    print yfiles
 
 def change_files():
     global SLOPE_X_FILE
