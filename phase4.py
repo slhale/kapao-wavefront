@@ -143,7 +143,22 @@ def recon2(timestep):
     return reconflat
 
 
-def rmsplot(slope_x=slope_x, SLOPE_X_FILE=SLOPE_X_FILE, show=True):
+def rmsplot():
+    # for backward compatability
+    rms_x_plot()
+
+def remove_prefix(text, prefix):
+    ''' 
+        Helper function for removing prefixed from strings.
+    '''
+    if text.startswith(prefix):
+        return text[len(prefix):]
+    return text 
+
+def rms_x_plot(slope_x=slope_x, SLOPE_X_FILE=SLOPE_X_FILE, show=True):
+    '''
+        Plots the RMS in the x slopes as a function of time. 
+    '''
     rmsarray = np.zeros(0)    
     for i in xrange(len(slope_x.data)):
         rec = recon2(i)
@@ -152,11 +167,29 @@ def rmsplot(slope_x=slope_x, SLOPE_X_FILE=SLOPE_X_FILE, show=True):
     
     plt.plot(range(len(rmsarray)),rmsarray)
     plt.xlabel('Timestep')
-    plt.ylabel('RMS')
+    plt.ylabel('RMS (x)')
     if show:
         plt.show()
     else:
-        plt.savefig(SLOPE_X_FILE+'.png', bbox_inches='tight')
+        plt.savefig(SLOPE_X_FILE+'_x'+'.png', bbox_inches='tight')
+
+def rms_y_plot(slope_y=slope_y, SLOPE_Y_FILE=SLOPE_Y_FILE, show=True):
+    '''
+        Plots the RMS in the y slopes as a function of time. 
+    '''
+    rmsarray = np.zeros(0)    
+    for i in xrange(len(slope_y.data)):
+        rec = recon2(i)
+        rms = np.sqrt(np.mean(np.square(rec)))
+        rmsarray = np.append(rmsarray,rms)
+    
+    plt.plot(range(len(rmsarray)),rmsarray)
+    plt.xlabel('Timestep')
+    plt.ylabel('RMS (y)')
+    if show:
+        plt.show()
+    else:
+        plt.savefig(SLOPE_Y_FILE+'_y'+'.png', bbox_inches='tight')
 
 # This does not work
 # I believe it does not work if an array is not in the right format for recon2
