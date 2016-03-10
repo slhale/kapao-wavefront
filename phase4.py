@@ -149,10 +149,18 @@ def rmsplot():
 
 def remove_prefix(text, prefix):
     ''' 
-        Helper function for removing prefixed from strings.
+        Helper function for removing prefixes from strings.
     '''
     if text.startswith(prefix):
         return text[len(prefix):]
+    return text 
+
+def remove_postfix(text, postfix):
+    ''' 
+        Helper function for removing endings of strings.
+    '''
+    if text.endswith(postfix):
+        return text[:-len(postfix)]
     return text 
 
 def rms_x_plot(slope_x=slope_x, SLOPE_X_FILE=SLOPE_X_FILE, show=True):
@@ -171,7 +179,10 @@ def rms_x_plot(slope_x=slope_x, SLOPE_X_FILE=SLOPE_X_FILE, show=True):
     if show:
         plt.show()
     else:
-        plt.savefig(SLOPE_X_FILE+'_x'+'.png', bbox_inches='tight')
+        filename = remove_prefix(SLOPE_X_FILE, './runs/')
+        filename = remove_postfix(filename, '.tel')
+        filename = './rmsplots/rmsplot_' + filename
+        plt.savefig(filename+'.png', bbox_inches='tight')
 
 def rms_y_plot(slope_y=slope_y, SLOPE_Y_FILE=SLOPE_Y_FILE, show=True):
     '''
@@ -189,7 +200,10 @@ def rms_y_plot(slope_y=slope_y, SLOPE_Y_FILE=SLOPE_Y_FILE, show=True):
     if show:
         plt.show()
     else:
-        plt.savefig(SLOPE_Y_FILE+'_y'+'.png', bbox_inches='tight')
+        filename = remove_prefix(SLOPE_Y_FILE, './runs/')
+        filename = remove_postfix(filename, '.tel')
+        filename = './rmsplots/rmsplot_' + filename
+        plt.savefig(filename+'.png', bbox_inches='tight')
 
 # This does not work
 # I believe it does not work if an array is not in the right format for recon2
