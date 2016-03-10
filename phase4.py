@@ -205,6 +205,38 @@ def rms_y_plot(slope_y=slope_y, SLOPE_Y_FILE=SLOPE_Y_FILE, show=True):
         filename = './rmsplots/rmsplot_' + filename
         plt.savefig(filename+'.png', bbox_inches='tight')
 
+def rms_xy_plot(slope_x=slope_x, SLOPE_X_FILE=SLOPE_X_FILE, slope_y=slope_y, SLOPE_Y_FILE=SLOPE_Y_FILE, show=True):
+    '''
+        Plots the RMS in the y slopes and the x slopes as a function of time
+        on top of each other in the same plot. 
+    '''
+    rms_x_array = np.zeros(0)    
+    for i in xrange(len(slope_x.data)):
+        rec = recon2(i)
+        rms = np.sqrt(np.mean(np.square(rec)))
+        rms_x_array = np.append(rms_x_array,rms)
+    
+    rms_y_array = np.zeros(0)    
+    for i in xrange(len(slope_y.data)):
+        rec = recon2(i)
+        rms = np.sqrt(np.mean(np.square(rec)))
+        rms_y_array = np.append(rms_y_array,rms)
+    
+    plt.plot(range(len(rms_x_array)),rms_x_array)
+    plt.plot(range(len(rms_y_array)),rms_y_array)
+    plt.xlabel('Timestep')
+    plt.ylabel('RMS')
+    if show:
+        plt.show()
+    else:
+        filename = remove_prefix(SLOPE_X_FILE, './runs/')
+        filename = remove_prefix(filename, 'slope_x')
+        filename = 'slopes_x_y' + filename
+        filename = remove_postfix(filename, '.tel')
+        filename = './rmsplots/rmsplot_' + filename
+        plt.savefig(filename+'.png', bbox_inches='tight')
+
+
 # This does not work
 # I believe it does not work if an array is not in the right format for recon2
 def rmsplot_many(directory='runs'):
