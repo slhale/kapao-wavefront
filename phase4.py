@@ -30,10 +30,9 @@ SLOPE_Y_FILE = './runs/slope_y_' + '20140710_224918' + '.tel'
 
 slope_x, slope_y = Slopes(SLOPE_X_FILE), Slopes(SLOPE_Y_FILE)
 
-def get_files():
-    # this is the folder in which we will look for telemetry
-    file_directoy = 'runs'
-   
+def get_files(file_directoy='runs'):
+    # file_directory is the folder in which we will look for telemetry
+       
     # get all of the files which have the .tel extension 
     files = []
     for telfile in os.listdir(file_directoy):
@@ -55,6 +54,9 @@ def get_files():
     # TODO: make these pairs into tuples or something neater than this
     xfiles.sort()
     yfiles.sort()
+
+    return xfiles, yfiles
+
 
 def change_files():
     global SLOPE_X_FILE
@@ -129,7 +131,7 @@ def recon2(timestep):
     return reconflat
 
 
-def rmsplot():
+def rmsplot(slope_x=slope_x, SLOPE_X_FILE=SLOPE_X_FILE, show=True):
     rmsarray = np.zeros(0)    
     for i in xrange(len(slope_x.data)):
         rec = recon2(i)
@@ -139,4 +141,30 @@ def rmsplot():
     plt.plot(range(len(rmsarray)),rmsarray)
     plt.xlabel('Timestep')
     plt.ylabel('RMS')
-    plt.show()
+    if show:
+        plt.show()
+    else:
+        plt.savefig(SLOPE_X_FILE+'.png', bbox_inches='tight')
+
+
+def rmsplot_many(directory='runs'):
+    
+    # get the files
+    xfiles, yfiles = get_files(directory)
+
+    # plot the files
+    for telfile in xfiles:
+        slope_x = Slopes('runs/'+telfile)
+        rmsarray = np.zeros(0)    
+        for i in xrange(len(slope_x.data)):
+            rec = recon2(i)
+            rms = np.sqrt(np.mean(np.square(rec)))
+            rmsarray = np.append(rmsarray,rms)
+    
+        plt.plot(range(len(rmsarray)),rmsarray)
+        plt.xlabel('Timestep')
+        plt.ylabel('RMS')
+        plt.savefig('rmsplot-'+telfile+'.png', bbox_inches='tight')
+
+
+
