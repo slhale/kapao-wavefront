@@ -31,6 +31,11 @@ SLOPE_Y_FILE = './runs/slope_y_' + '20140710_224918' + '.tel'
 slope_x, slope_y = Slopes(SLOPE_X_FILE), Slopes(SLOPE_Y_FILE)
 
 def get_files(file_directoy='runs'):
+    ''' 
+        Returns all of the files in the passed subdirectory (default 'runs')
+        which match the following format of starting with 'slope_x' or
+        'slope_y' and ending with the file extension '.tel'
+    '''
     # file_directory is the folder in which we will look for telemetry
        
     # get all of the files which have the .tel extension 
@@ -59,6 +64,13 @@ def get_files(file_directoy='runs'):
 
 
 def change_files():
+    '''
+        Changes the golbal x and y slope files.
+        Aquires file name to switch to via prompt upon running the function.
+        The name of the data files are assumed to be of the format of 
+        (example) ./runs/slope_x_20140710_224918.tel
+        where the date 20140710_224918 can be changed, and x could also be y.
+    '''
     global SLOPE_X_FILE
     global SLOPE_Y_FILE
     global slope_x
@@ -146,7 +158,8 @@ def rmsplot(slope_x=slope_x, SLOPE_X_FILE=SLOPE_X_FILE, show=True):
     else:
         plt.savefig(SLOPE_X_FILE+'.png', bbox_inches='tight')
 
-
+# This does not work
+# I believe it does not work if an array is not in the right format for recon2
 def rmsplot_many(directory='runs'):
     
     # get the files
