@@ -19,8 +19,8 @@ from FTR import FourierTransformReconstructor as FTRecon
 import matplotlib.pyplot as plt
 import os
 
-SLOPE_X_FILE = './runs/slope_x_' + '20140710_224918' + '.tel'
-SLOPE_Y_FILE = './runs/slope_y_' + '20140710_224918' + '.tel'
+SLOPE_X_FILE = './runs/slope_x_' + '20140702_193703' + '.tel'
+SLOPE_Y_FILE = './runs/slope_y_' + '20140702_193703' + '.tel'
 
 #SLOPE_X_FILE = './run_421/slope_x_' + '20131217_023427' + '.tel'
 #SLOPE_Y_FILE = './run_421/slope_y_' + '20131217_023427' + '.tel'
@@ -92,11 +92,10 @@ def change_files():
     # redo the slopes with the new data  
     slope_x, slope_y = Slopes(SLOPE_X_FILE), Slopes(SLOPE_Y_FILE)
 
-
-def slope_to_recon(slope_frame):
+#default value of parameter added by Sarah 20160310
+def slope_to_recon(slope_frame=slope_x.data[0]):
     """
     Turn a 1D list of slope values to an 11x11 grid with zeros in empty spots
-    
     """
     grid = np.zeros((11,11))
     grid[0][3:8] = slope_frame[0:5]
@@ -110,6 +109,7 @@ def slope_to_recon(slope_frame):
     grid[8][1:10] = slope_frame[76:85]
     grid[9][2:9] = slope_frame[85:92]
     grid[10][3:8] = slope_frame[92:97]
+    # transpose the grid
     grid = grid.T # we're filling in row-by-row from the top, but numbering starts
                   # in the bottom left with zero and proceeds column-by-column
     return grid
@@ -141,6 +141,24 @@ def recon2(timestep):
     reconflat = remove_ttp(phi).flatten()
     
     return reconflat
+
+def wave_recon_plot(axis='x',time_index=0, show=True):
+    # sarah add test of slope_to_recon()
+    data = recon2(time_index)#slope_to_recon(slope_x.data[time_index])
+
+    # make the plot
+    # it is a colored heat map of the 2d array
+    # TODO: make the scaling always have the same color for zero
+    plt.imshow(data)
+    plt.colorbar(orientation='vertical')
+    
+    if show:
+        plt.show()
+    else:
+        filename = remove_prefix(SLOPE_X_FILE, './runs/')
+        filename = remove_postfix(filename, '.tel')
+        filename = './reconplots/reconplot_time_' + str(time_index) + '_' + filename
+        plt.savefig(filename+'.png', bbox_inches='tight')
 
 
 def rmsplot():
@@ -222,8 +240,8 @@ def rms_xy_plot(slope_x=slope_x, SLOPE_X_FILE=SLOPE_X_FILE, slope_y=slope_y, SLO
         rms = np.sqrt(np.mean(np.square(rec)))
         rms_y_array = np.append(rms_y_array,rms)
     
-    plt.plot(range(len(rms_x_array)),rms_x_array)
-    plt.plot(range(len(rms_y_array)),rms_y_array)
+    plt.plot(range(len(rms_x_array)),rms_x_array, 'b')
+    plt.plot(range(len(rms_y_array)),rms_y_array, 'g')
     plt.xlabel('Timestep')
     plt.ylabel('RMS')
     if show:
