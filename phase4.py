@@ -194,7 +194,7 @@ def wave_recon_plot2():
 
     # Add axes for time slider
     axes = fig.add_axes([0.25, 0.02, 0.5, 0.02])
-    max_time = len(slope_x.data) # the maximum index that exists for the time 
+    max_time = len(slope_x.data) - 1 # the maximum index that exists for the time 
     timeslider = Slider(axes, 'Time', 0, max_time, valinit=0, valfmt='%i')
     
     def update(val):
