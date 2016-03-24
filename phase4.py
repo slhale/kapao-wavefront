@@ -17,6 +17,7 @@ from kapaolibplus import Slopes
 from FTR.utils import circle_aperture, remove_piston, remove_tiptilt
 from FTR import FourierTransformReconstructor as FTRecon
 import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
 import os
 
 SLOPE_X_FILE = './runs/slope_x_' + '20140702_193703' + '.tel'
@@ -167,7 +168,7 @@ def wave_recon_plot(time_index, show=True):
     # make the plot
     # it is a colored heat map of the 2d array
     # TODO: make the scaling always have the same color for zero
-    plt.imshow(data)
+    plt.imshow(data, interpolation='none')
     plt.colorbar(orientation='vertical')
     
     if show:
@@ -183,12 +184,37 @@ def wave_recon_plot2():
         Plots the Fourier reconstruction of the wavefront as a function of time.  
     '''
     # This plot should have a slider for time 
-    
-    # Initial data
-    data = recon(0)
 
-    plt.imshow(data)
-    plt.colorbar(orientation='vertical')
+    # create the figure
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    data = recon(0)
+    im = ax.imshow(data, interpolation='none')
+    plt.colorbar(im, ax=ax, orientation='vertical')
+    plt.show(block=False)
+   
+    #fig.subplots_adjust(left=0.25, bottom=0.25)
+ 
+    # Initial data
+    #data = recon(0)
+    #plt.imshow(data, interpolation='none')
+    #plt.colorbar(orientation='vertical')
+
+    # TODO: replace upper limit of slider 
+    axes = fig.add_axes([0.0, 0.0, 0.65, 0.03])   
+    timeslider = Slider(axes, 'Time', 0, len(data[0]), valinit=0)
+    
+    def update(val):
+        # Update the data
+        time_index = int(val)
+        data = recon(time_index)
+        # Set the image array to this
+        im.set_array(data)
+        # Redraw the plot
+        #plt.imshow(data)
+        fig.canvas.draw()
+        #plt.draw()
+    timeslider.on_changed(update)
     
     plt.show()
 
