@@ -131,6 +131,18 @@ def remove_ttp(data):
     tr, tx, ty = remove_tiptilt(ap, pr)
     return tr
 
+#Added by Sarah based off of recon2
+# Same as recon2 but stops before the flattening process
+def recon(timestep):
+    '''
+        
+    '''
+    xs = slope_to_recon(slope_x.data[timestep])
+    ys = slope_to_recon(slope_y.data[timestep])
+    recon = FTRecon(ap, filter='mod_hud', suppress_tt=True)
+    phi = recon(xs, ys)
+    
+    return phi
 
 def recon2(timestep):
     xs = slope_to_recon(slope_x.data[timestep])
@@ -142,9 +154,15 @@ def recon2(timestep):
     
     return reconflat
 
-def wave_recon_plot(axis='x',time_index=0, show=True):
-    # sarah add test of slope_to_recon()
-    data = recon2(time_index)#slope_to_recon(slope_x.data[time_index])
+def wave_recon_plot(time_index, show=True):
+    '''
+        Plots the Fourier reconstruction of the wavefront at a particular time index.
+        Takes time_index, the integer time at which to plot the wavefront. 
+        Optionally takes show, a boolean of whether to immediately display the graph, 
+         or to save it as a file.  
+    '''
+
+    data = recon(time_index)
 
     # make the plot
     # it is a colored heat map of the 2d array
@@ -159,6 +177,20 @@ def wave_recon_plot(axis='x',time_index=0, show=True):
         filename = remove_postfix(filename, '.tel')
         filename = './reconplots/reconplot_time_' + str(time_index) + '_' + filename
         plt.savefig(filename+'.png', bbox_inches='tight')
+
+def wave_recon_plot2():
+    '''
+        Plots the Fourier reconstruction of the wavefront as a function of time.  
+    '''
+    # This plot should have a slider for time 
+    
+    # Initial data
+    data = recon(0)
+
+    plt.imshow(data)
+    plt.colorbar(orientation='vertical')
+    
+    plt.show()
 
 
 def rmsplot():
