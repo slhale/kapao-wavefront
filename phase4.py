@@ -183,26 +183,19 @@ def wave_recon_plot2():
     '''
         Plots the Fourier reconstruction of the wavefront as a function of time.  
     '''
-    # This plot should have a slider for time 
 
     # create the figure
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    data = recon(0)
+    data = recon(0) #initial data 
     im = ax.imshow(data, interpolation='none')
     plt.colorbar(im, ax=ax, orientation='vertical')
     plt.show(block=False)
-   
-    #fig.subplots_adjust(left=0.25, bottom=0.25)
- 
-    # Initial data
-    #data = recon(0)
-    #plt.imshow(data, interpolation='none')
-    #plt.colorbar(orientation='vertical')
 
-    # TODO: replace upper limit of slider 
-    axes = fig.add_axes([0.0, 0.0, 0.65, 0.03])   
-    timeslider = Slider(axes, 'Time', 0, len(data[0]), valinit=0)
+    # Add axes for time slider
+    axes = fig.add_axes([0.25, 0.02, 0.5, 0.02])
+    max_time = len(slope_x.data) # the maximum index that exists for the time 
+    timeslider = Slider(axes, 'Time', 0, max_time, valinit=0, valfmt='%i')
     
     def update(val):
         # Update the data
@@ -211,9 +204,8 @@ def wave_recon_plot2():
         # Set the image array to this
         im.set_array(data)
         # Redraw the plot
-        #plt.imshow(data)
         fig.canvas.draw()
-        #plt.draw()
+    # Whe the slider is slid, update the plot
     timeslider.on_changed(update)
     
     plt.show()
