@@ -33,7 +33,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     from matplotlib.widgets import Slider
     import numpy as np
     from FTR import FourierTransformReconstructor as FTRecon
-    from FTR.utils import circle_aperture
+    from FTR.utils import circle_aperture, remove_piston, remove_tiptilt
     import os.path
     
     from kapaolibplus import (subaps_to_grid, overlay_indices, Slopes, IntensityMap, DMPositions, newpos_to_grid, overlay_indices_newpos, slope_to_grid, overlay_indices_slope)
@@ -72,6 +72,10 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     ### Helper functions here 
     ## Copied from Sarah's modified phase4.py
     
+    shape = (11, 11)
+    r = 5.5
+    ap = circle_aperture(shape, r)
+    
     def slope_to_recon(slope_frame=slope_x.data[0]):
         """
         Turn a 1D list of slope values to an 11x11 grid with zeros in empty spots
@@ -100,13 +104,25 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
         '''
         xs = slope_to_recon(slope_x.data[timestep])
         ys = slope_to_recon(slope_y.data[timestep])
-        shape = (11, 11)
-        r = 5.5
-        ap = circle_aperture(shape, r)
         recon = FTRecon(ap, filter='mod_hud', suppress_tt=True)
         phi = recon(xs, ys)
         
         return phi
+    
+    def remove_ttp(data):
+        pr, p = remove_piston(ap, data)
+        tr, tx, ty = remove_tiptilt(ap, pr)
+        return tr
+    
+    def recon2(timestep):
+        xs = slope_to_recon(slope_x.data[timestep])
+        ys = slope_to_recon(slope_y.data[timestep])
+        recon = FTRecon(ap, filter='mod_hud', suppress_tt=True)
+        phi = recon(xs, ys)
+        
+        reconflat = remove_ttp(phi).flatten()
+        
+        return reconflat
     
     
     lenx = len(slope_x.data)
@@ -136,27 +152,15 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     plt.colorbar()
     plt.title('Wave Reconstruction')
     
-    '''
-    plt.subplot2grid((3,2),(0,0))
-    slope_x_im = plt.imshow(slope_to_grid(slope_x_data), origin='lower', interpolation='none')
-    plt.colorbar()
-    plt.title('X Slope - first time step')
-   
-    plt.subplot2grid((3,2),(0,1))
-    slope_y_im = plt.imshow(slope_to_grid(slope_y_data), origin='lower', interpolation='none')
-    plt.colorbar()
-    plt.title('Y Slope - first time step')
-    '''
-
     plt.subplot2grid((3,2),(1,0))
     new_pos_im = plt.imshow(new_pos_data, origin='lower', interpolation='none')
     plt.colorbar()
-    plt.title('DM Pos - first time step')
+    plt.title('DM Position')
 
-    plt.subplot2grid((3,2),(1,1))
+    plt.subplot2grid((3,2),(0,1))
     intensity_map_im = plt.imshow(intensity_map_data, origin='lower', interpolation='none')
     plt.colorbar()
-    plt.title('Intensity - first time step')
+    plt.title('Intensity')
 
     # Add axes for time slider
     axes = figall.add_axes([0.25, 0.02, 0.5, 0.02])
@@ -181,27 +185,48 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
         
     # Whe the slider is slid, update the plot
     timeslider.on_changed(update)
-   
- 
-    #Tip/tilt as a function of time
     
-    #pulling out the 120th and 122nd index for each time step
+    
+    ## RMS as a funtion of time plot
+    
+    rms_x_array = np.zeros(0)    
+    for i in xrange(len(slope_x.data)):
+        rec = recon2(i)
+        rms = np.sqrt(np.mean(np.square(rec)))
+        rms_x_array = np.append(rms_x_array,rms)
+    
+    rms_y_array = np.zeros(0)    
+    for i in xrange(len(slope_y.data)):
+        rec = recon2(i)
+        rms = np.sqrt(np.mean(np.square(rec)))
+        rms_y_array = np.append(rms_y_array,rms)
+    
+    plt.subplot2grid((3,2),(1,1))#,colspan=2)
+    plt.plot(range(len(rms_x_array)),rms_x_array, 'b')
+    plt.plot(range(len(rms_y_array)),rms_y_array, 'g')
+    plt.xlabel('Timestep')
+    plt.ylabel('RMS')
+    plt.title('RMS a Function of Time')
+    
+    
+    ## Tip/tilt as a function of time plot
+    
+    # pulling out the 120th and 122nd index for each time step
     tt_1 = np.zeros(lenn)
     tt_2 = np.zeros(lenn)
     for i in range(0,lenn):
         tt_1[i] = new_pos.data[i][120] # Channel 2 (Left/Right on PDVShow & Andor)
         tt_2[i] = new_pos.data[i][122] # Channel 1 (Up/Down on PDVShow & Andor)
-        
-
-
+    
     plt.subplot2grid((3,2),(2,0))#,colspan=2)
     plt.plot(new_pos.timestamps - new_pos.timestamps[0],tt_1,'.', new_pos.timestamps - new_pos.timestamps[0],tt_2,'.')
     plt.ylabel("Tip/tilt")
     plt.title('Tip/Tilt as  Function of Time')
     plt.xlabel("Time (ms)")
     plt.legend(['120 (L/R? PDVShow)', '122 (U/D? PDVShow)'],'upper left')    
-        
-    #pinned actuators as a function of time
+    
+    
+    ## Pinned actuators as a function of time plot
     
     pinned = np.zeros(lenn)
     for i in range(0,lenn):
