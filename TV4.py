@@ -111,7 +111,7 @@ def telviz(subdirectory,filenum,save=False):
  
     plt.subplot2grid((3,2),(0,0))#, colspan=2)
     plt.imshow(slope_to_grid(slope_x.data[0]), origin='lower')
-    overlay_indices_slope()
+    #overlay_indices_slope()
     plt.colorbar()
     plt.title('X Slope - first time step')
    
@@ -125,7 +125,7 @@ def telviz(subdirectory,filenum,save=False):
 
     plt.subplot2grid((3,2),(0,1))#2), colspan=2)
     plt.imshow(slope_to_grid(slope_y.data[0]), origin='lower')
-    overlay_indices_slope()
+    #overlay_indices_slope()
     plt.colorbar()
     plt.title('Y Slope - first time step')
 
@@ -139,7 +139,7 @@ def telviz(subdirectory,filenum,save=False):
 
     plt.subplot2grid((3,2),(1,0))#, colspan=2)
     plt.imshow(newpos_to_grid(new_pos.data[0]), origin='lower')
-    overlay_indices_newpos()
+    #overlay_indices_newpos()
     plt.colorbar()
     plt.title('DM Pos - first time step')
 
@@ -153,7 +153,7 @@ def telviz(subdirectory,filenum,save=False):
 
     plt.subplot2grid((3,2),(1,1))#2), colspan=2)
     plt.imshow(subaps_to_grid(intensity_map.data[0]), origin='lower')
-    overlay_indices()
+    #overlay_indices()
     plt.colorbar()
     plt.title('Intensity - first time step')
 
