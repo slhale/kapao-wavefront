@@ -119,8 +119,8 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     slope_x_data = slope_x.data[0]
     slope_y_data = slope_y.data[0]
     recon_data = recon(0)
-    new_pos_data = new_pos.data[0]
-    intensity_map_data = intensity_map.data[0]
+    new_pos_data = newpos_to_grid(new_pos.data[0])
+    intensity_map_data = subaps_to_grid(intensity_map.data[0])
     
     # Plots
 
@@ -149,12 +149,12 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     '''
 
     plt.subplot2grid((3,2),(1,0))
-    new_pos_im = plt.imshow(newpos_to_grid(new_pos_data), origin='lower', interpolation='none')
+    new_pos_im = plt.imshow(new_pos_data, origin='lower', interpolation='none')
     plt.colorbar()
     plt.title('DM Pos - first time step')
 
     plt.subplot2grid((3,2),(1,1))
-    intensity_map_im = plt.imshow(subaps_to_grid(intensity_map_data), origin='lower', interpolation='none')
+    intensity_map_im = plt.imshow(intensity_map_data, origin='lower', interpolation='none')
     plt.colorbar()
     plt.title('Intensity - first time step')
 
@@ -163,14 +163,22 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     max_time = len(slope_x.data) - 1 # the maximum index that exists for the time 
     timeslider = Slider(axes, 'Time', 0, max_time, valinit=0, valfmt='%i')
 
+
     def update(val):
         # Update the data
         time_index = int(val)
         recon_data = recon(time_index)
+        new_pos_data = newpos_to_grid(new_pos.data[time_index])
+        intensity_map_data = subaps_to_grid(intensity_map.data[time_index])
+        
         # Set the image array to this
         recon_im.set_array(recon_data)
+        new_pos_im.set_array(new_pos_data)
+        intensity_map_im.set_array(intensity_map_data)
+        
         # Redraw the plot
         figall.canvas.draw()
+        
     # Whe the slider is slid, update the plot
     timeslider.on_changed(update)
    
