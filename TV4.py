@@ -98,72 +98,41 @@ def telviz(subdirectory,filenum,save=False):
     leni = len(intensity_map.data)
     lenn = len(new_pos.data)
     
-
+    # Initialize our data variables
+    # the variables will be updated when the time slider changes
+    slope_x_data = slope_x.data[0]
+    slope_y_data = slope_y.data[0]
+    new_pos_data = new_pos.data[0]
+    intensity_map_data = intensity_map.data[0]
     
     # Plots
 
      # Summary Panel
         
-    figall = plt.figure(figsize=(12,8))#(10,7.5))#(20,15))
+    figall = plt.figure(figsize=(12,8))
 
     # Set font size to be smaller 
     plt.rcParams.update({'font.size': 10})
  
-    plt.subplot2grid((3,2),(0,0))#, colspan=2)
-    plt.imshow(slope_to_grid(slope_x.data[0]), origin='lower')
-    #overlay_indices_slope()
+    plt.subplot2grid((3,2),(0,0))
+    plt.imshow(slope_to_grid(slope_x_data), origin='lower')
     plt.colorbar()
     plt.title('X Slope - first time step')
    
-    ''' 
-    plt.subplot2grid((3,4),(0,1))
-    plt.imshow(slope_to_grid(slope_x.data[lenx-1]), origin='lower')
-    overlay_indices_slope()
-    plt.colorbar()
-    plt.title('X Slope - last time step')
-    '''
-
-    plt.subplot2grid((3,2),(0,1))#2), colspan=2)
-    plt.imshow(slope_to_grid(slope_y.data[0]), origin='lower')
-    #overlay_indices_slope()
+    plt.subplot2grid((3,2),(0,1))
+    plt.imshow(slope_to_grid(slope_y_data), origin='lower')
     plt.colorbar()
     plt.title('Y Slope - first time step')
 
-    '''
-    plt.subplot2grid((3,4),(0,3))
-    plt.imshow(slope_to_grid(slope_y.data[leny-1]), origin='lower')
-    overlay_indices_slope()
-    plt.colorbar()
-    plt.title('Y Slope - last time step')
-    '''
-
-    plt.subplot2grid((3,2),(1,0))#, colspan=2)
-    plt.imshow(newpos_to_grid(new_pos.data[0]), origin='lower')
-    #overlay_indices_newpos()
+    plt.subplot2grid((3,2),(1,0))
+    plt.imshow(newpos_to_grid(new_pos_data), origin='lower')
     plt.colorbar()
     plt.title('DM Pos - first time step')
 
-    '''    
-    plt.subplot2grid((3,4),(1,1))
-    plt.imshow(newpos_to_grid(new_pos.data[lenn-1]), origin='lower')
-    overlay_indices_newpos()
-    plt.colorbar()
-    plt.title('DM Pos - last time step')
-    '''
-
-    plt.subplot2grid((3,2),(1,1))#2), colspan=2)
-    plt.imshow(subaps_to_grid(intensity_map.data[0]), origin='lower')
-    #overlay_indices()
+    plt.subplot2grid((3,2),(1,1))
+    plt.imshow(subaps_to_grid(intensity_map_data), origin='lower')
     plt.colorbar()
     plt.title('Intensity - first time step')
-
-    '''    
-    plt.subplot2grid((3,4),(1,3))
-    plt.imshow(subaps_to_grid(intensity_map.data[leni-1]), origin='lower')
-    overlay_indices()
-    plt.colorbar()
-    plt.title('Intensity - last time step')
-    '''
 
     
     #Tip/tilt as a function of time
