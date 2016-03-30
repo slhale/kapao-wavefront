@@ -201,7 +201,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
         rms = np.sqrt(np.mean(np.square(rec)))
         rms_y_array = np.append(rms_y_array,rms)
     
-    plt.subplot2grid((3,2),(1,1))#,colspan=2)
+    plt.subplot2grid((3,2),(1,1))
     plt.plot(range(len(rms_x_array)),rms_x_array, 'b')
     plt.plot(range(len(rms_y_array)),rms_y_array, 'g')
     plt.xlabel('Timestep')
@@ -218,7 +218,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
         tt_1[i] = new_pos.data[i][120] # Channel 2 (Left/Right on PDVShow & Andor)
         tt_2[i] = new_pos.data[i][122] # Channel 1 (Up/Down on PDVShow & Andor)
     
-    plt.subplot2grid((3,2),(2,0))#,colspan=2)
+    plt.subplot2grid((3,2),(2,0))
     plt.plot(new_pos.timestamps - new_pos.timestamps[0],tt_1,'.', new_pos.timestamps - new_pos.timestamps[0],tt_2,'.')
     plt.ylabel("Tip/tilt")
     plt.title('Tip/Tilt as  Function of Time')
@@ -234,7 +234,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
             if new_pos.data[i][j] <= 100 or new_pos.data[i][j] >= 64900:
                 pinned[i] = pinned[i] + 1
                 
-    plt.subplot2grid((3,2),(2,1))#2),colspan=2)
+    plt.subplot2grid((3,2),(2,1))
     plt.plot(new_pos.timestamps - new_pos.timestamps[0],pinned,'.')
     plt.ylabel("Number of pinned actuators")
     plt.xlabel("Time (ms)")
