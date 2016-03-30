@@ -104,56 +104,67 @@ def telviz(subdirectory,filenum,save=False):
 
      # Summary Panel
         
-    figall = plt.figure(figsize=(20,15))
+    figall = plt.figure(figsize=(12,8))#(10,7.5))#(20,15))
+
+    # Set font size to be smaller 
+    plt.rcParams.update({'font.size': 10})
  
-    plt.subplot2grid((3,4),(0,0))
+    plt.subplot2grid((3,2),(0,0))#, colspan=2)
     plt.imshow(slope_to_grid(slope_x.data[0]), origin='lower')
     overlay_indices_slope()
     plt.colorbar()
     plt.title('X Slope - first time step')
-    
+   
+    ''' 
     plt.subplot2grid((3,4),(0,1))
     plt.imshow(slope_to_grid(slope_x.data[lenx-1]), origin='lower')
     overlay_indices_slope()
     plt.colorbar()
     plt.title('X Slope - last time step')
+    '''
 
-    plt.subplot2grid((3,4),(0,2))
+    plt.subplot2grid((3,2),(0,1))#2), colspan=2)
     plt.imshow(slope_to_grid(slope_y.data[0]), origin='lower')
     overlay_indices_slope()
     plt.colorbar()
     plt.title('Y Slope - first time step')
 
+    '''
     plt.subplot2grid((3,4),(0,3))
     plt.imshow(slope_to_grid(slope_y.data[leny-1]), origin='lower')
     overlay_indices_slope()
     plt.colorbar()
     plt.title('Y Slope - last time step')
+    '''
 
-    plt.subplot2grid((3,4),(1,0))
+    plt.subplot2grid((3,2),(1,0))#, colspan=2)
     plt.imshow(newpos_to_grid(new_pos.data[0]), origin='lower')
     overlay_indices_newpos()
     plt.colorbar()
     plt.title('DM Pos - first time step')
-    
+
+    '''    
     plt.subplot2grid((3,4),(1,1))
     plt.imshow(newpos_to_grid(new_pos.data[lenn-1]), origin='lower')
     overlay_indices_newpos()
     plt.colorbar()
     plt.title('DM Pos - last time step')
+    '''
 
-    plt.subplot2grid((3,4),(1,2))
+    plt.subplot2grid((3,2),(1,1))#2), colspan=2)
     plt.imshow(subaps_to_grid(intensity_map.data[0]), origin='lower')
     overlay_indices()
     plt.colorbar()
     plt.title('Intensity - first time step')
-    
+
+    '''    
     plt.subplot2grid((3,4),(1,3))
     plt.imshow(subaps_to_grid(intensity_map.data[leni-1]), origin='lower')
     overlay_indices()
     plt.colorbar()
     plt.title('Intensity - last time step')
-    
+    '''
+
     
     #Tip/tilt as a function of time
     
@@ -166,7 +177,7 @@ def telviz(subdirectory,filenum,save=False):
         
 
 
-    plt.subplot2grid((3,4),(2,0),colspan=2)
+    plt.subplot2grid((3,2),(2,0))#,colspan=2)
     plt.plot(new_pos.timestamps - new_pos.timestamps[0],tt_1,'.', new_pos.timestamps - new_pos.timestamps[0],tt_2,'.')
     plt.ylabel("Tip/tilt")
     plt.title('Tip/Tilt as  Function of Time')
@@ -181,7 +192,7 @@ def telviz(subdirectory,filenum,save=False):
             if new_pos.data[i][j] <= 100 or new_pos.data[i][j] >= 64900:
                 pinned[i] = pinned[i] + 1
                 
-    plt.subplot2grid((3,4),(2,2),colspan=2)
+    plt.subplot2grid((3,2),(2,1))#2),colspan=2)
     plt.plot(new_pos.timestamps - new_pos.timestamps[0],pinned,'.')
     plt.ylabel("Number of pinned actuators")
     plt.xlabel("Time (ms)")
