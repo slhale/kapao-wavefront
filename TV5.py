@@ -1,8 +1,8 @@
 ###  To run this code on the AO Lab Linuxes:
-##  1) Move to the directory with TV3.py in a terminal window.
+##  1) Move to the directory with TV5.py in a terminal window.
 ##  2) type "ur_setup"
 ##  3) type "python"
-##  4) type "from TV3 import telviz" at the python prompt
+##  4) type "from TV5 import telviz" at the python prompt
 ##  5a) then telviz('subdirectory','filenum') at the python prompt.
 ##  5b) then telviz('subdirectory','filenum',True) at the python prompt to send
 ##      plots to .pngs.
@@ -18,7 +18,7 @@
 ## can email at shale@hmc.edu
 
 
-# default values for subdirectory nd filenum match Sarah's setup 
+# default values for subdirectory and filenum match Sarah's setup 
 def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     '''
     Visualizes slopes, intensities, and newpos data in a heatmap grid, and 
