@@ -31,6 +31,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     
     from matplotlib import pyplot as plt
     from matplotlib.widgets import Slider
+    from matplotlib.font_manager import FontProperties
     import numpy as np
     from FTR import FourierTransformReconstructor as FTRecon
     from FTR.utils import circle_aperture, remove_piston, remove_tiptilt
@@ -70,7 +71,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     
     
     ### Helper functions here 
-    ## Copied from Sarah's modified phase4.py
+    ## Copied from Sarah's modified phase5.py
     
     shape = (11, 11)
     r = 5.5
@@ -223,8 +224,9 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     plt.ylabel("Tip/tilt")
     plt.title('Tip/Tilt as  Function of Time')
     plt.xlabel("Time (ms)")
-    plt.legend(['120 (L/R? PDVShow)', '122 (U/D? PDVShow)'],'upper left')    
-    
+    fontP = FontProperties()
+    fontP.set_size('x-small')
+    plt.legend(['120 (L/R? PDVShow)', '122 (U/D? PDVShow)'],'best', prop=fontP)    
     
     ## Pinned actuators as a function of time plot
     
