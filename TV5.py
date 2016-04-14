@@ -41,8 +41,11 @@ def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,no
     
     # If we are told to run the ConfigSummary, do so
     if run_summary:
-        summary = imp.load_source('ConfigSummary', '/home/student/Pomona_v3/Config/ConfigSummary.py')
-        summary.main() 
+        # Non-sketch way does not work :(
+        #summary = imp.load_source('ConfigSummary', '/home/student/Pomona_v3/Config/ConfigSummary.py')
+        #summary.main() 
+        # Use sketch way
+        execfile('/home/student/Pomona_v3/Config/ConfigSummary.py')
     
     filenum1, filenum2 = filenum.split('_')
     
