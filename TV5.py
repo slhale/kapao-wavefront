@@ -1,8 +1,8 @@
 ###  To run this code on the AO Lab Linuxes:
-##  1) Move to the directory with TV3.py in a terminal window.
+##  1) Move to the directory with TV5.py in a terminal window.
 ##  2) type "ur_setup"
 ##  3) type "python"
-##  4) type "from TV3 import telviz" at the python prompt
+##  4) type "from TV5 import telviz" at the python prompt
 ##  5a) then telviz('subdirectory','filenum') at the python prompt.
 ##  5b) then telviz('subdirectory','filenum',True) at the python prompt to send
 ##      plots to .pngs.
@@ -18,7 +18,7 @@
 ## can email at shale@hmc.edu
 
 
-# default values for subdirectory nd filenum match Sarah's setup 
+# default values for subdirectory and filenum match Sarah's setup 
 def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     '''
     Visualizes slopes, intensities, and newpos data in a heatmap grid, and 
@@ -31,6 +31,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     
     from matplotlib import pyplot as plt
     from matplotlib.widgets import Slider
+    from matplotlib.font_manager import FontProperties
     import numpy as np
     from FTR import FourierTransformReconstructor as FTRecon
     from FTR.utils import circle_aperture, remove_piston, remove_tiptilt
@@ -70,7 +71,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     
     
     ### Helper functions here 
-    ## Copied from Sarah's modified phase4.py
+    ## Copied from Sarah's modified phase5.py
     
     shape = (11, 11)
     r = 5.5
@@ -142,25 +143,30 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
 
      # Summary Panel
         
-    figall = plt.figure(figsize=(12,8))
-
+    figall = plt.figure(figsize=(10,8))
+    
     # Set font size to be smaller 
     plt.rcParams.update({'font.size': 10})
+
+    # Set the subplots to have spacing between them 
+    plt.subplots_adjust(hspace=0.4, wspace=0.4)
+
+    # Plot the three 'square' plots vertically on the left side 
  
     plt.subplot2grid((3,2),(0,0))
-    recon_im = plt.imshow(recon_data, origin='lower', interpolation='none')
+    intensity_map_im = plt.imshow(intensity_map_data, origin='lower', interpolation='none')
     plt.colorbar()
-    plt.title('Wave Reconstruction')
+    plt.title('Intensity')
     
     plt.subplot2grid((3,2),(1,0))
     new_pos_im = plt.imshow(new_pos_data, origin='lower', interpolation='none')
     plt.colorbar()
     plt.title('DM Position')
 
-    plt.subplot2grid((3,2),(0,1))
-    intensity_map_im = plt.imshow(intensity_map_data, origin='lower', interpolation='none')
+    plt.subplot2grid((3,2),(2,0))
+    recon_im = plt.imshow(recon_data, origin='lower', interpolation='none')
     plt.colorbar()
-    plt.title('Intensity')
+    plt.title('Wave Reconstruction')
 
     # Add axes for time slider
     axes = figall.add_axes([0.25, 0.02, 0.5, 0.02])
@@ -186,6 +192,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     # Whe the slider is slid, update the plot
     timeslider.on_changed(update)
     
+    # Plot the three 'rectangular' plots vertically on the right side 
     
     ## RMS as a funtion of time plot
     
@@ -201,7 +208,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
         rms = np.sqrt(np.mean(np.square(rec)))
         rms_y_array = np.append(rms_y_array,rms)
     
-    plt.subplot2grid((3,2),(1,1))
+    plt.subplot2grid((3,2),(0,1))
     plt.plot(range(len(rms_x_array)),rms_x_array, 'b')
     plt.plot(range(len(rms_y_array)),rms_y_array, 'g')
     plt.xlabel('Timestep')
@@ -218,13 +225,14 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
         tt_1[i] = new_pos.data[i][120] # Channel 2 (Left/Right on PDVShow & Andor)
         tt_2[i] = new_pos.data[i][122] # Channel 1 (Up/Down on PDVShow & Andor)
     
-    plt.subplot2grid((3,2),(2,0))
+    plt.subplot2grid((3,2),(1,1))
     plt.plot(new_pos.timestamps - new_pos.timestamps[0],tt_1,'.', new_pos.timestamps - new_pos.timestamps[0],tt_2,'.')
     plt.ylabel("Tip/tilt")
     plt.title('Tip/Tilt as  Function of Time')
     plt.xlabel("Time (ms)")
-    plt.legend(['120 (L/R? PDVShow)', '122 (U/D? PDVShow)'],'upper left')    
-    
+    fontP = FontProperties()
+    fontP.set_size('x-small')
+    plt.legend(['120 (L/R? PDVShow)', '122 (U/D? PDVShow)'],'best', prop=fontP)    
     
     ## Pinned actuators as a function of time plot
     
