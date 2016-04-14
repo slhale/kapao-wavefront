@@ -19,7 +19,7 @@
 
 
 # default values for subdirectory and filenum match Sarah's setup 
-def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
+def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,normalize_dm=True,normalize_intensity=True,save=False):
     '''
     Visualizes slopes, intensities, and newpos data in a heatmap grid, and 
     plots tip/tilt and pinned actuators as a function of time.
@@ -162,44 +162,45 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
 
     # loop over all the times
     for t in range(max_time):
-        
-        # loop over all the individual data values in the wave reconstruction
-        wave_max_i = len(wave_recon[0])
-        for i in range(wave_max_i):
-            wave_max_j = len(wave_recon[0][0])
-            for j in range(wave_max_j):
-                current_recon_val = wave_recon[t][i][j]
-                if min_recon_val > current_recon_val:
-                    min_recon_val = current_recon_val
-                if max_recon_val < current_recon_val:
-                    max_recon_val = current_recon_val
+        if normalize_recon: 
+            # loop over all the individual data values in the wave reconstruction
+            wave_max_i = len(wave_recon[0])
+            for i in range(wave_max_i):
+                wave_max_j = len(wave_recon[0][0])
+                for j in range(wave_max_j):
+                    current_recon_val = wave_recon[t][i][j]
+                    if min_recon_val > current_recon_val:
+                        min_recon_val = current_recon_val
+                    if max_recon_val < current_recon_val:
+                        max_recon_val = current_recon_val
+                #
             #
-        
-        # loop over all the individual data values in the intensity
-        inten_max_i = len(intensity[0])
-        for i in range(inten_max_i):
-            inten_max_j = len(intensity[0][0])
-            for j in range(inten_max_j):
-                current_inten_val = intensity[t][i][j]
-                if min_intensity_val > current_inten_val:
-                    min_intensity_val = current_inten_val
-                if max_intensity_val < current_inten_val:
-                    max_intensity_val = current_inten_val
+        if normalize_intensity:
+            # loop over all the individual data values in the intensity
+            inten_max_i = len(intensity[0])
+            for i in range(inten_max_i):
+                inten_max_j = len(intensity[0][0])
+                for j in range(inten_max_j):
+                    current_inten_val = intensity[t][i][j]
+                    if min_intensity_val > current_inten_val:
+                        min_intensity_val = current_inten_val
+                    if max_intensity_val < current_inten_val:
+                        max_intensity_val = current_inten_val
+                #
             #
-        #
-        
-        # loop over all the individual data values in the new dm position
-        dm_max_i = len(new_dm[0])
-        for i in range(dm_max_i):
-            dm_max_j = len(new_dm[0][0])
-            for j in range(dm_max_j):
-                current_dm_val = new_dm[t][i][j]
-                if min_dm_val > current_dm_val:
-                    min_dm_val = current_dm_val
-                if max_dm_val < current_dm_val:
-                    max_dm_val = current_dm_val
+        if normalize_dm:
+            # loop over all the individual data values in the new dm position
+            dm_max_i = len(new_dm[0])
+            for i in range(dm_max_i):
+                dm_max_j = len(new_dm[0][0])
+                for j in range(dm_max_j):
+                    current_dm_val = new_dm[t][i][j]
+                    if min_dm_val > current_dm_val:
+                        min_dm_val = current_dm_val
+                    if max_dm_val < current_dm_val:
+                        max_dm_val = current_dm_val
+                #
             #
-        #
     
     #print "wave recon slice", wave_recon[0]
     print "max recon val", max_recon_val
@@ -213,14 +214,17 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     
     # Make initial data so that the colorbars are ok
     recon_init = wave_recon[0]
-    recon_init[0][0] = max_recon_val
-    recon_init[0][1] = min_recon_val
+    if normalize_recon:
+        recon_init[0][0] = max_recon_val
+        recon_init[0][1] = min_recon_val
     dm_init = new_dm[0]
-    dm_init[0][0] = max_dm_val
-    dm_init[0][1] = min_dm_val
+    if normalize_dm:
+        dm_init[0][0] = max_dm_val
+        dm_init[0][1] = min_dm_val
     inten_init = intensity[0]
-    inten_init[0][0] = max_intensity_val
-    inten_init[0][1] = min_intensity_val
+    if normalize_intensity:
+        inten_init[0][0] = max_intensity_val
+        inten_init[0][1] = min_intensity_val
 
     # Initialize our data variables
     # the variables will be updated when the time slider changes
