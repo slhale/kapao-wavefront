@@ -19,7 +19,7 @@
 
 
 # default values for subdirectory and filenum match Sarah's setup 
-def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,normalize_dm=True,normalize_intensity=True,save=False):
+def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,normalize_dm=True,normalize_intensity=True,run_summary=False,save=False):
     '''
     Visualizes slopes, intensities, and newpos data in a heatmap grid, and 
     plots tip/tilt and pinned actuators as a function of time.
@@ -36,9 +36,13 @@ def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,no
     from FTR import FourierTransformReconstructor as FTRecon
     from FTR.utils import circle_aperture, remove_piston, remove_tiptilt
     import os.path
-    
+    import imp
     from kapaolibplus import (subaps_to_grid, overlay_indices, Slopes, IntensityMap, DMPositions, newpos_to_grid, overlay_indices_newpos, slope_to_grid, overlay_indices_slope)
     
+    # If we are told to run the ConfigSummary, do so
+    if run_summary:
+        summary = imp.load_source('ConfigSummary', '/home/student/Pomona_v3/Config/ConfigSummary.py')
+        summary.main() 
     
     filenum1, filenum2 = filenum.split('_')
     
@@ -158,7 +162,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,no
     max_intensity_val = -1000000
 
     print 'max time', max_time
-    print 'len of intensity', len(intensity)
+    #print 'len of intensity', len(intensity)
 
     # loop over all the times
     for t in range(max_time):
