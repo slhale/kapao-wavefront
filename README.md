@@ -4,7 +4,7 @@ This is a telemetry visualizer for KAPAO.
 
 Run 
 ```
-python -i TV4.py
+python -i TV5.py
 ```
 and then run
 ```
