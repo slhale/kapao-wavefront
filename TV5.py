@@ -131,13 +131,104 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
     leni = len(intensity_map.data)
     lenn = len(new_pos.data)
     
+    # Go through the slopes data and recon for each timestep (and store the recon)
+    wave_recon = []
+    intensity = []
+    new_dm = []
+    max_time = len(slope_x.data) - 1 # the maximum index that exists for the time 
+    for t in range(max_time):
+        wave_recon.append(recon(t))
+        # Go through the intensity data and new pos data and store the processed version too
+        intensity.append(subaps_to_grid(intensity_map.data[t]))
+        new_dm.append(newpos_to_grid(new_pos.data[t]))
+ 
+    # Find the min and max values for each heatmap plot 
+    # do this in order to get the correct normalization for the colorbars
+    #print wave_recon[4][1] # prints an array
+    #print intensity[10][1] # prints an array
+    print new_dm[10][1] # prints an array
+    # the wave reconstruction is an array of 2d arrays
+    # the intensity is an array of arrays
+    min_recon_val = 1000000  # big number
+    max_recon_val = -1000000 # small number
+    max_slope_x_val = -1000000
+    min_dm_val = 1000000
+    max_dm_val = -1000000
+    min_intensity_val = 1000000
+    max_intensity_val = -1000000
+
+    print 'max time', max_time
+    print 'len of intensity', len(intensity)
+
+    # loop over all the times
+    for t in range(max_time):
+        
+        # loop over all the individual data values in the wave reconstruction
+        wave_max_i = len(wave_recon[0])
+        for i in range(wave_max_i):
+            wave_max_j = len(wave_recon[0][0])
+            for j in range(wave_max_j):
+                current_recon_val = wave_recon[t][i][j]
+                if min_recon_val > current_recon_val:
+                    min_recon_val = current_recon_val
+                if max_recon_val < current_recon_val:
+                    max_recon_val = current_recon_val
+            #
+        
+        # loop over all the individual data values in the intensity
+        inten_max_i = len(intensity[0])
+        for i in range(inten_max_i):
+            inten_max_j = len(intensity[0][0])
+            for j in range(inten_max_j):
+                current_inten_val = intensity[t][i][j]
+                if min_intensity_val > current_inten_val:
+                    min_intensity_val = current_inten_val
+                if max_intensity_val < current_inten_val:
+                    max_intensity_val = current_inten_val
+            #
+        #
+        
+        # loop over all the individual data values in the new dm position
+        dm_max_i = len(new_dm[0])
+        for i in range(dm_max_i):
+            dm_max_j = len(new_dm[0][0])
+            for j in range(dm_max_j):
+                current_dm_val = new_dm[t][i][j]
+                if min_dm_val > current_dm_val:
+                    min_dm_val = current_dm_val
+                if max_dm_val < current_dm_val:
+                    max_dm_val = current_dm_val
+            #
+        #
+    
+    #print "wave recon slice", wave_recon[0]
+    print "max recon val", max_recon_val
+    print "min recon val", min_recon_val
+    #print "intensity slice", intensity[0]
+    print "max intensity val", max_intensity_val
+    print "min intensity val", min_intensity_val
+    #print "new dm slice", new_dm[0]
+    print "max dm val", max_dm_val
+    print "min dm val", min_dm_val
+    
+    # Make initial data so that the colorbars are ok
+    recon_init = wave_recon[0]
+    recon_init[0][0] = max_recon_val
+    recon_init[0][1] = min_recon_val
+    dm_init = new_dm[0]
+    dm_init[0][0] = max_dm_val
+    dm_init[0][1] = min_dm_val
+    inten_init = intensity[0]
+    inten_init[0][0] = max_intensity_val
+    inten_init[0][1] = min_intensity_val
+
     # Initialize our data variables
     # the variables will be updated when the time slider changes
-    slope_x_data = slope_x.data[0]
-    slope_y_data = slope_y.data[0]
-    recon_data = recon(0)
-    new_pos_data = newpos_to_grid(new_pos.data[0])
-    intensity_map_data = subaps_to_grid(intensity_map.data[0])
+    #slope_x_data = slope_x.data[0]
+    #slope_y_data = slope_y.data[0]
+    recon_data = recon_init#wave_recon[0]
+    new_pos_data = dm_init#newpos_to_grid(new_pos.data[0])
+    intensity_map_data = inten_init#subaps_to_grid(intensity_map.data[0])
     
     # Plots
 
@@ -170,14 +261,13 @@ def telviz(subdirectory='runs',filenum='20140701_214748',save=False):
 
     # Add axes for time slider
     axes = figall.add_axes([0.25, 0.02, 0.5, 0.02])
-    max_time = len(slope_x.data) - 1 # the maximum index that exists for the time 
     timeslider = Slider(axes, 'Time', 0, max_time, valinit=0, valfmt='%i')
 
 
     def update(val):
         # Update the data
         time_index = int(val)
-        recon_data = recon(time_index)
+        recon_data = recon(time_index)#wave_recon[time_index]
         new_pos_data = newpos_to_grid(new_pos.data[time_index])
         intensity_map_data = subaps_to_grid(intensity_map.data[time_index])
         
