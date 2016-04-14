@@ -153,7 +153,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,no
     # do this in order to get the correct normalization for the colorbars
     #print wave_recon[4][1] # prints an array
     #print intensity[10][1] # prints an array
-    print new_dm[10][1] # prints an array
+    #print new_dm[10][1] # prints an array
     # the wave reconstruction is an array of 2d arrays
     # the intensity is an array of arrays
     min_recon_val = 1000000  # big number
@@ -354,6 +354,7 @@ def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,no
 
     if save == True:
         figall.savefig('./' + subdirectory + '/' + 'fig_all_' + filenum + '.png', dpi=300)
-
+    
+    update(0)
     
     plt.show()
