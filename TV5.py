@@ -270,14 +270,19 @@ def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,no
     plt.colorbar()
     plt.title('Wave Reconstruction')
 
+    # determine the time step between each time index    
+    timestep = slope_x.timestamps[1] - slope_x.timestamps[0]
     # Add axes for time slider
     axes = figall.add_axes([0.25, 0.02, 0.5, 0.02])
-    timeslider = Slider(axes, 'Time', 0, max_time, valinit=0, valfmt='%i')
-
+    timeslider = Slider(axes, 'Timestep', 0, max_time, valinit=0, valfmt='%i')
+    #timeslider = Slider(axes, 'Time', 0, int(slope_x.timestamps[max_time] - slope_x.timestamps[0]), valinit=0, valfmt='%i')
+    # TODO: Make the time slider have units of time instead of timesteps
+    # Currently this is not working because of the conversion from datetime object to integer does not wokr
 
     def update(val):
         # Update the data
         time_index = int(val)
+        #time_index = int(val/timestep)
         recon_data = recon(time_index)#wave_recon[time_index]
         new_pos_data = newpos_to_grid(new_pos.data[time_index])
         intensity_map_data = subaps_to_grid(intensity_map.data[time_index])
