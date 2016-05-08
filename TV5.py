@@ -310,9 +310,12 @@ def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,no
         rms_y_array = np.append(rms_y_array,rms)
     
     plt.subplot2grid((3,2),(0,1))
-    plt.plot(range(len(rms_x_array)),rms_x_array, 'b')
-    plt.plot(range(len(rms_y_array)),rms_y_array, 'g')
-    plt.xlabel('Timestep')
+    #plt.plot(range(len(rms_x_array)),rms_x_array, 'b')
+    #plt.plot(range(len(rms_y_array)),rms_y_array, 'g')
+    plt.plot(slope_x.timestamps - slope_x.timestamps[0], rms_x_array, 'b')
+    plt.plot(slope_y.timestamps - slope_y.timestamps[0], rms_y_array, 'g')
+    #plt.xlabel('Timestep')
+    plt.xlabel('Time (ms)')
     plt.ylabel('RMS')
     plt.title('RMS a Function of Time')
     
