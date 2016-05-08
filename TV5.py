@@ -333,8 +333,10 @@ def telviz(subdirectory='runs',filenum='20140701_214748',normalize_recon=True,no
     plt.xlabel("Time (ms)")
     fontP = FontProperties()
     fontP.set_size('x-small')
-    plt.legend(['120 (L/R? PDVShow)', '122 (U/D? PDVShow)'],'best', prop=fontP)    
-    
+    #plt.legend(['120 (L/R? PDVShow)', '122 (U/D? PDVShow)'],'best', prop=fontP)    
+    lgn = plt.legend(['120 (L/R?)', '122 (U/D?)'],'best', prop=fontP)
+    lgn.draggable()
+
     ## Pinned actuators as a function of time plot
     
     pinned = np.zeros(lenn)
