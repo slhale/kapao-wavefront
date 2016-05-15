@@ -1,0 +1,91 @@
+﻿To use the application, run 
+python -i TV5.py
+then 
+>>> telviz(‘directory/where/data/is/located’, ‘data_timestamp’)
+from the appropriate directory. 
+
+
+The requirements for this program are 
+Files:
+* TV5.py
+* kapaolibplus.py
+* Telemetry files to visualize
+Other libraries:
+* Numpy
+* Astropy
+* FFTW
+* FTR
+
+
+The file requirements can be downloaded from https://github.com/slhale/kapao-wavefront 
+
+
+The python libraries required may be installed depending on operating system.
+
+
+This code was written using astropy version 1.1.1, numpy version 1.10.4, and fftw version 3.3.4, but these specific versions are not necessarily required. 
+
+
+If you do not have python installed, then you can install it from https://www.python.org/downloads/ 
+
+
+________________
+
+
+
+
+Mac: 
+For OS X you can install numpy and astropy using a package manager.
+
+
+Numpy and pip (the package manager) may already be installed. You should also be able to use other package managers.
+
+
+If you do not have pip installed, sudo easy_install pip
+
+
+If you want to check which python packages you already have installed, then run  pip list
+You can also check what versions of astropy and numpy you have with pip show astropy  or pip show numpy
+
+
+Numpy: sudo pip install numpy
+
+
+Astropy:  sudo pip install astropy
+
+
+Before installing FTR, FFTW must be installed. FFTW cannot be installed with a package manager. You must instead download a tarball from http://www.fftw.org/download.html 
+After unzipping the tarball, go into the directory and run  
+./configure --enable-threads 
+make
+sudo make install
+
+
+Then after installing FFTW, you may install FTR by 
+sudo pip install git+https://github.com/alexrudy/ftr.git
+________________
+
+
+
+
+Linux:
+For Linux you can install all of the dependencies using your preferred package manager. 
+Numpy may already be installed. 
+
+
+If you are using apt-get, then run 
+sudo apt-get install numpy
+sudo apt-get install astropy
+
+
+Before installing FTR, FFTW must be installed. 
+FFTW may be installed with a package manager. If you do so, make sure to get the developer version.
+You can also instead download a tarball from http://www.fftw.org/download.html 
+After unzipping the tarball, go into the directory and run  
+./configure
+make
+make install
+
+
+Then after installing FFTW, you may install FTR by 
+sudo pip install git+https://github.com/alexrudy/ftr.git
